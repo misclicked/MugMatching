@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29001.49
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MugMatching", "MugMatching\MugMatching.vcxproj", "{08E1884A-5B9D-4CC1-A82C-2D46A423AE9A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{08E1884A-5B9D-4CC1-A82C-2D46A423AE9A}.Debug|x64.ActiveCfg = Debug|x64
+		{08E1884A-5B9D-4CC1-A82C-2D46A423AE9A}.Debug|x64.Build.0 = Debug|x64
+		{08E1884A-5B9D-4CC1-A82C-2D46A423AE9A}.Debug|x86.ActiveCfg = Debug|Win32
+		{08E1884A-5B9D-4CC1-A82C-2D46A423AE9A}.Debug|x86.Build.0 = Debug|Win32
+		{08E1884A-5B9D-4CC1-A82C-2D46A423AE9A}.Release|x64.ActiveCfg = Release|x64
+		{08E1884A-5B9D-4CC1-A82C-2D46A423AE9A}.Release|x64.Build.0 = Release|x64
+		{08E1884A-5B9D-4CC1-A82C-2D46A423AE9A}.Release|x86.ActiveCfg = Release|Win32
+		{08E1884A-5B9D-4CC1-A82C-2D46A423AE9A}.Release|x86.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {E38BA5FB-E8AF-470B-AA97-BFB9516894F0}
+	EndGlobalSection
+EndGlobal
