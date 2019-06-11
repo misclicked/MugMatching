@@ -3,41 +3,9 @@
 #include <opencv2/highgui.hpp>
 #include <opencv2/opencv.hpp>
 #include <iostream>
-#include <stdio.h>
 using namespace cv;
 using namespace std;
 
-void unevenLightCompensate(Mat& image, int blockSize)
-{
-	if (image.channels() == 3) cvtColor(image, image, 7);
-	double average = mean(image)[0];
-	int rows_new = ceil(double(image.rows) / double(blockSize));
-	int cols_new = ceil(double(image.cols) / double(blockSize));
-	Mat blockImage;
-	blockImage = Mat::zeros(rows_new, cols_new, CV_32FC1);
-	for (int i = 0; i < rows_new; i++)
-	{
-		for (int j = 0; j < cols_new; j++)
-		{
-			int rowmin = i * blockSize;
-			int rowmax = (i + 1) * blockSize;
-			if (rowmax > image.rows) rowmax = image.rows;
-			int colmin = j * blockSize;
-			int colmax = (j + 1) * blockSize;
-			if (colmax > image.cols) colmax = image.cols;
-			Mat imageROI = image(Range(rowmin, rowmax), Range(colmin, colmax));
-			double temaver = mean(imageROI)[0];
-			blockImage.at<float>(i, j) = temaver;
-		}
-	}
-	blockImage = blockImage - average;
-	Mat blockImage2;
-	resize(blockImage, blockImage2, image.size(), (0, 0), (0, 0), INTER_CUBIC);
-	Mat image2;
-	image.convertTo(image2, CV_32FC1);
-	Mat dst = image2 - blockImage2;
-	dst.convertTo(image, CV_8UC1);
-}
 int main(int, char**)
 {
 	Mat frame;
@@ -51,6 +19,8 @@ int main(int, char**)
 	Mat templateA, templateB, templateC;
 	int settingMode=0;
 	int showCountourID = 0;
+	ShapeMatchModes matchmode = ShapeMatchModes::CONTOURS_MATCH_I1;
+	double matchThreshold = 0.1;
 	//--- INITIALIZE VIDEOCAPTURE
 	VideoCapture cap;
 	// open the default camera using default API
@@ -66,8 +36,7 @@ int main(int, char**)
 		return -1;
 	}
 	//--- GRAB AND WRITE LOOP
-	cout << "Start grabbing" << endl
-		<< "Press any key to terminate" << endl;
+	cout << "Start grabbing" << endl;
 	for (;;)
 	{
 		if (settingMode) {
@@ -98,7 +67,7 @@ int main(int, char**)
 			double tmp;
 			if (templateA.rows != 0) {
 				for (int i = 0; i < contours.size();i++) {
-					tmp = matchShapes(templateA, contours[i], CONTOURS_MATCH_I3, 0);
+					tmp = matchShapes(templateA, contours[i], matchmode, 0);
 					if (tmp < minA) {
 						minA = tmp;
 						Aidx = i;
@@ -107,7 +76,7 @@ int main(int, char**)
 			}
 			if (templateB.rows != 0) {
 				for (int i = 0; i < contours.size(); i++) {
-					tmp = matchShapes(templateB, contours[i], CONTOURS_MATCH_I3, 0);
+					tmp = matchShapes(templateB, contours[i], matchmode, 0);
 					if (tmp < minB) {
 						minB = tmp;
 						Bidx = i;
@@ -116,7 +85,7 @@ int main(int, char**)
 			}
 			if (templateC.rows != 0) {
 				for (int i = 0; i < contours.size(); i++) {
-					tmp = matchShapes(templateC, contours[i], CONTOURS_MATCH_I3, 0);
+					tmp = matchShapes(templateC, contours[i], matchmode, 0);
 					if (tmp < minC) {
 						minC = tmp;
 						Cidx = i;
@@ -129,15 +98,15 @@ int main(int, char**)
 				cout << "Template not setted" << endl;
 			}
 			else {
-				if (minA < 0.1) {
+				if (minA < matchThreshold) {
 					cout << "A mug " << minA << endl;
 					drawContours(frame, contours, Aidx, Scalar(255, 0, 0), 2, 8);
 				}
-				if (minB < 0.1) {
+				if (minB < matchThreshold) {
 					cout << "B mug " << minB << endl;
 					drawContours(frame, contours, Bidx, Scalar(255, 0, 0), 2, 8);
 				}
-				if (minC < 0.1) {
+				if (minC < matchThreshold) {
 					cout << "C mug " << minC << endl;
 					drawContours(frame, contours, Cidx, Scalar(255, 0, 0), 2, 8);
 				}
@@ -204,6 +173,21 @@ int main(int, char**)
 			cout << "switch view" << endl;
 			viewFrame = !viewFrame;
 			break;
+		case '1':
+			matchmode = ShapeMatchModes::CONTOURS_MATCH_I1;
+			break;
+		case '2':
+			matchmode = ShapeMatchModes::CONTOURS_MATCH_I2;
+			break;
+		case '3':
+			matchmode = ShapeMatchModes::CONTOURS_MATCH_I3;
+			break;
+		case 't':
+		case 'T':
+			cout << "new matching threshold:";
+			cin >> matchThreshold;
+			break;
+
 		default:
 			break;
 		}
