@@ -54,12 +54,12 @@ int main(int, char**)
 				break;
 			}
 			// show live and wait for a key with timeout long enough to show images
-			cvtColor(frame, grayFrame, ColorConversionCodes::COLOR_BGR2GRAY);
-			bilateralFilter(grayFrame, filteredFrame, 5, 30, 30);
-			double thresh = threshold(filteredFrame, filteredFrame, 0, 255, ThresholdTypes::THRESH_OTSU);
-			Canny(filteredFrame, filteredFrame, thresh * 0.5, thresh);
-			morphologyEx(filteredFrame, filteredFrame, MorphTypes::MORPH_CLOSE, Mat());
-			findContours(filteredFrame, contours, RetrievalModes::RETR_EXTERNAL, ContourApproximationModes::CHAIN_APPROX_SIMPLE);
+			cvtColor(frame, grayFrame, ColorConversionCodes::COLOR_BGR2GRAY);//rgb2graylevel
+			bilateralFilter(grayFrame, filteredFrame, 5, 30, 30);//blur for canny
+			double thresh = threshold(filteredFrame, filteredFrame, 0, 255, ThresholdTypes::THRESH_OTSU); //otsu threshold
+			Canny(filteredFrame, filteredFrame, thresh * 0.5, thresh); //canny
+			morphologyEx(filteredFrame, filteredFrame, MorphTypes::MORPH_CLOSE, Mat());  //close for 增加輪廓完整性
+			findContours(filteredFrame, contours, RetrievalModes::RETR_EXTERNAL, ContourApproximationModes::CHAIN_APPROX_SIMPLE);  //找輪廓
 			double minA, minB, minC;
 			int Aidx, Bidx, Cidx;
 			Aidx = Bidx = Cidx = -1;
